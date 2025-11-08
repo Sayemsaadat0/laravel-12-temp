@@ -1,59 +1,298 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Laravel 12 API Backend with Sanctum Authentication
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A RESTful API built with Laravel 12 featuring role-based authentication using Laravel Sanctum. This project includes user authentication, role-based access control (User & Admin), and comprehensive user management endpoints.
 
-## About Laravel
+## Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- ✅ **User Authentication** - Register, Login, Logout with Sanctum tokens
+- ✅ **Role-Based Access Control** - User and Admin roles
+- ✅ **User Management** - Update and delete own account
+- ✅ **Admin Panel** - Full CRUD operations for user management
+- ✅ **API Security** - Bearer token authentication
+- ✅ **RESTful API** - Clean and organized API endpoints
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Prerequisites
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Before you begin, ensure you have the following installed:
 
-## Learning Laravel
+- **PHP** >= 8.2
+- **Composer** (PHP package manager)
+- **Database** (MySQL, PostgreSQL, or SQLite)
+- **Node.js & NPM** (optional, for frontend assets)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## Installation
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Option 1: Fresh Laravel 12 Installation
 
-## Laravel Sponsors
+If you want to create a new Laravel 12 project from scratch:
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+```bash
+# Create new Laravel 12 project
+composer create-project laravel/laravel my-api-backend
 
-### Premium Partners
+# Navigate to project directory
+cd my-api-backend
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+# Install Laravel Sanctum
+composer require laravel/sanctum
 
-## Contributing
+# Publish Sanctum configuration
+php artisan vendor:publish --provider="Laravel\Sanctum\SanctumServiceProvider"
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+# Run migrations
+php artisan migrate
+```
 
-## Code of Conduct
+Then follow the setup steps below to configure the project.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Option 2: Clone Existing Repository
 
-## Security Vulnerabilities
+If you're cloning this repository:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/my-api-backend.git
+
+# Navigate to project directory
+cd my-api-backend
+
+# Install PHP dependencies
+composer install
+
+# Copy environment file
+cp .env.example .env
+
+# Generate application key
+php artisan key:generate
+
+# Configure your database in .env file
+# Edit .env and set your database credentials
+
+# Run migrations
+php artisan migrate
+
+# (Optional) Install frontend dependencies
+npm install
+```
+
+## Configuration
+
+### Database Setup
+
+Edit the `.env` file and configure your database:
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=your_database_name
+DB_USERNAME=your_username
+DB_PASSWORD=your_password
+```
+
+**For SQLite (default):**
+```env
+DB_CONNECTION=sqlite
+DB_DATABASE=/absolute/path/to/database.sqlite
+```
+
+Or use the default SQLite file:
+```bash
+touch database/database.sqlite
+```
+
+### Environment Variables
+
+Make sure your `.env` file has the following configured:
+
+```env
+APP_NAME="Laravel API"
+APP_ENV=local
+APP_KEY=base64:... (generated by key:generate)
+APP_DEBUG=true
+APP_URL=http://localhost:8000
+```
+
+## Running the Application
+
+```bash
+# Start the development server
+php artisan serve
+
+# The API will be available at http://localhost:8000
+```
+
+## API Endpoints
+
+### Base URL
+```
+http://localhost:8000/api
+```
+
+### Public Routes
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/register` | Register a new user |
+| POST | `/api/login` | Login user and get token |
+
+### Authenticated User Routes
+
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| POST | `/api/logout` | Logout user | ✅ Bearer Token |
+| GET | `/api/user` | Get authenticated user | ✅ Bearer Token |
+| PUT | `/api/user/update` | Update authenticated user | ✅ Bearer Token |
+| DELETE | `/api/user/delete` | Delete authenticated user | ✅ Bearer Token |
+
+### Admin Routes
+
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| GET | `/api/admin/dashboard` | Get dashboard stats | ✅ Admin Token |
+| GET | `/api/admin/users` | Get all users | ✅ Admin Token |
+| GET | `/api/admin/users/{id}` | Get user by ID | ✅ Admin Token |
+| POST | `/api/admin/users` | Create new user | ✅ Admin Token |
+| PUT | `/api/admin/users/{id}` | Update user | ✅ Admin Token |
+| DELETE | `/api/admin/users/{id}` | Delete user | ✅ Admin Token |
+
+## API Usage Examples
+
+### Register User
+```bash
+POST /api/register
+Content-Type: application/json
+
+{
+    "name": "John Doe",
+    "email": "john@example.com",
+    "password": "password123",
+    "password_confirmation": "password123"
+}
+```
+
+### Login
+```bash
+POST /api/login
+Content-Type: application/json
+
+{
+    "email": "john@example.com",
+    "password": "password123"
+}
+```
+
+### Get Authenticated User
+```bash
+GET /api/user
+Authorization: Bearer {your_token_here}
+```
+
+### Update User
+```bash
+PUT /api/user/update
+Authorization: Bearer {your_token_here}
+Content-Type: application/json
+
+{
+    "name": "Updated Name",
+    "email": "newemail@example.com"
+}
+```
+
+## Creating an Admin User
+
+To create an admin user, use Laravel Tinker:
+
+```bash
+php artisan tinker
+```
+
+Then run:
+```php
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+
+User::create([
+    'name' => 'Admin User',
+    'email' => 'admin@example.com',
+    'password' => Hash::make('password123'),
+    'role' => 'admin'
+]);
+```
+
+## Postman Collection
+
+Import the `postman_collection.json` file into Postman for easy API testing. The collection includes all endpoints with example requests.
+
+## Project Structure
+
+```
+my-api-backend/
+├── app/
+│   ├── Http/
+│   │   ├── Controllers/
+│   │   │   └── Api/
+│   │   │       ├── AuthController.php    # Authentication endpoints
+│   │   │       └── AdminController.php       # Admin endpoints
+│   │   └── Middleware/
+│   │       └── RoleMiddleware.php            # Role-based access control
+│   └── Models/
+│       └── User.php                          # User model with roles
+├── database/
+│   └── migrations/
+│       ├── 0001_01_01_000000_create_users_table.php
+│       └── 2025_11_08_043418_add_role_to_users_table.php
+├── routes/
+│   └── api.php                               # API routes
+├── config/
+│   └── sanctum.php                           # Sanctum configuration
+└── bootstrap/
+    └── app.php                               # Application bootstrap
+```
+
+## Technologies Used
+
+- **Laravel 12** - PHP Framework
+- **Laravel Sanctum** - API Authentication
+- **PHP 8.2+** - Programming Language
+
+## Testing
+
+```bash
+# Run tests
+php artisan test
+```
+
+## Troubleshooting
+
+### Common Issues
+
+1. **"Route [api] not found"**
+   - Ensure `bootstrap/app.php` includes API routes
+   - Check that `routes/api.php` exists
+
+2. **"Class 'Laravel\Sanctum\HasApiTokens' not found"**
+   - Run: `composer require laravel/sanctum`
+   - Run: `composer dump-autoload`
+
+3. **Database connection errors**
+   - Check `.env` file configuration
+   - Ensure database exists
+   - Run: `php artisan config:clear`
+
+4. **Migration errors**
+   - Run: `php artisan migrate:fresh` (⚠️ This deletes all data)
+   - Or: `php artisan migrate:rollback` then `php artisan migrate`
 
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## Contributing
+
+Thank you for considering contributing to this project! Please feel free to submit pull requests or open issues for bugs and feature requests.
+
+## Support
+
+For support, email your-email@example.com or open an issue in the repository.
